@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Apine\Container;
 
+use function is_callable;
 
 /**
  * Class Component
@@ -31,7 +32,7 @@ class Component
     /**
      * @var bool
      */
-    private $factory = false;
+    private $factory;
     
     /**
      * @var mixed
@@ -42,7 +43,7 @@ class Component
      * Component constructor.
      *
      * @param string $name
-     * @param mixed|callable|object $content
+     * @param mixed|callable $content
      * @param bool $factory
      */
     public function __construct(string $name, $content, bool $factory = false)
@@ -70,23 +71,6 @@ class Component
     public function getName() : string
     {
         return $this->name;
-    }
-    
-    /**
-     * @param string $type
-     *
-     * @return bool
-     * @throws \Throwable
-     */
-    public function hasType(string $type) : bool
-    {
-        $value = $this->invoke();
-        
-        if (is_scalar($value) || is_array($value) || is_resource($value) || is_null($value)) {
-            return gettype($value) === $type;
-        } else {
-            return $value instanceof $type;
-        }
     }
     
     /**

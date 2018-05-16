@@ -41,19 +41,15 @@ class Container implements ContainerInterface
      *
      * @param string $id Identifier of the entry to look for.
      *
-     * @throws ContainerNotFoundException  No entry was found for **this** identifier.
-     * @throws ContainerException Error while retrieving the entry.
+     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+     * @throws ContainerExceptionInterface Error while retrieving the entry.
      * @return mixed Entry.
      */
     public function get($id)
     {
         try {
-            if (!$this->has($id)) {
-                throw new ContainerNotFoundException(sprintf('No entry was found for the identifier "$e"', $id));
-            }
-    
             return $this->find($id)->invoke();
-        } catch (ContainerNotFoundException $e) {
+        } catch (NotFoundExceptionInterface $e) {
             throw $e;
         } catch (\Throwable $e) {
             throw new ContainerException(
@@ -75,28 +71,35 @@ class Container implements ContainerInterface
      */
     public function has($id) : bool
     {
-        return (null !== $this->find($id));
+        $found = false;
+        
+        foreach ($this->entries as $component) {
+            if ($id === $component->getName()) {
+                $found = true;
+            }
+        }
+        
+        return $found;
     }
     
     /**
      * @param string $id
      *
-     * @return Component|null
+     * @return Component
      *
-     * @throws \Throwable
+     * @throws NotFoundExceptionInterface
      */
-    private function find(string $id) : ?Component
+    private function find(string $id) : Component
     {
         $result = null;
     
         foreach ($this->entries as $component) {
-            if (($id === $component->getName()) || $component->hasType($id)) {
-                $result = $component;
-                break;
+            if ($id === $component->getName()) {
+                return $component;
             }
         }
         
-        return $result;
+        throw new ContainerNotFoundException(sprintf('No entry was found for the identifier "$e"', $id));
     }
     
     /**

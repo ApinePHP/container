@@ -5,8 +5,13 @@
  * @license MIT
  * @copyright 2018 Tommy Teasdale
  */
-declare(strict_types=1);
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUnusedLocalVariableInspection */
+/** @noinspection ReturnTypeCanBeDeclaredInspection */
+/** @noinspection PhpUndefinedClassInspection */
+
+declare(strict_types=1);
 
 use Apine\Container\Component;
 use PHPUnit\Framework\TestCase;
@@ -69,39 +74,6 @@ class ComponentTest extends TestCase
         $this->assertAttributeEmpty('computed', $component);
         $this->assertInstanceOf(TestClass::class, $value);
     }
-    
-    public function testHasTypeOnStringContent()
-    {
-        $component = new Component('component', 'text content', false);
-        
-        $this->assertEquals(true, $component->hasType('string'));
-    }
-    
-    public function testHasTypeOnObjectContent()
-    {
-        $object = new TestClass();
-        $component = new Component('component', $object, false);
-        
-        $this->assertEquals(true, $component->hasType(TestClass::class));
-    }
-    
-    public function testHasTypeOnCallableContent()
-    {
-        $component = new Component('component', function () {
-            return new TestClass();
-        }, false);
-        
-        $this->assertEquals(true, $component->hasType(TestClass::class));
-    }
-    
-    public function testHasTypeOnFactoryContent()
-    {
-        $component = new Component('component', function () {
-            return new TestClass();
-        }, true);
-        
-        $this->assertEquals(true, $component->hasType(TestClass::class));
-    }
 }
 
-class TestClass{};
+class TestClass{}
