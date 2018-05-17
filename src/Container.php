@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Apine\Container;
 
+use Closure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -26,14 +27,14 @@ class Container implements ContainerInterface
      * Doing so will override any entry with the same identifier
      *
      * @param string $id
-     * @param mixed $value
+     * @param Closure $function
      * @param bool $factory
      */
-    public function register (string $id, $value, bool $factory = false) : void
+    public function register (string $id, Closure $function, bool $factory = false) : void
     {
         $this->remove($id);
         
-        $this->entries[] = new Component($id, $value, $factory);
+        $this->entries[] = new Component($id, $function, $factory);
     }
     
     /**
@@ -48,7 +49,7 @@ class Container implements ContainerInterface
     public function get($id)
     {
         try {
-            return $this->find($id)->invoke();
+            return $this->find($id)->invoke($this);
         } catch (NotFoundExceptionInterface $e) {
             throw $e;
         } catch (\Throwable $e) {

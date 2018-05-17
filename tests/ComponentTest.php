@@ -15,26 +15,18 @@ declare(strict_types=1);
 
 use Apine\Container\Component;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class ComponentTest extends TestCase
 {
     public function testConstructor()
     {
         $object = new class(){};
-        $component = new Component('component', $object, false);
+        $component = new Component('component', function() use ($object) {
+            return $object;
+        }, false);
         $this->assertAttributeEquals('component', 'name', $component);
-        $this->assertAttributeEquals($object, 'content', $component);
         $this->assertAttributeEquals(false, 'factory', $component);
-    }
-    
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage A factory must be a callable
-     */
-    public function testConstructorFactoryContentMustBeACallable()
-    {
-        $object = new TestClass();
-        $component = new Component('component', $object, true);
     }
     
     public function testIsFactory()
@@ -59,20 +51,15 @@ class ComponentTest extends TestCase
     
     public function testInvoke()
     {
-        $component = new Component('component', 'text_content');
-        $value = $component->invoke();
+        $component = new Component('component', function () {
+            return 'text_content';
+        });
+        $container = $this->getMockBuilder(ContainerInterface::class)
+            ->setMethods(['get', 'has'])->getMockForAbstractClass();
+        
+        $value = $component->invoke($container);
         $this->assertAttributeNotEmpty('computed', $component);
         $this->assertEquals('text_content', $value);
-    }
-    
-    public function testInvokeOnFactory()
-    {
-        $component = new Component('component', function () {
-            return new TestClass();
-        }, true);
-        $value = $component->invoke();
-        $this->assertAttributeEmpty('computed', $component);
-        $this->assertInstanceOf(TestClass::class, $value);
     }
 }
 

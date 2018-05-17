@@ -10,7 +10,8 @@ declare(strict_types=1);
 
 namespace Apine\Container;
 
-use function is_callable;
+use Closure;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Component
@@ -43,15 +44,11 @@ class Component
      * Component constructor.
      *
      * @param string $name
-     * @param mixed|callable $content
+     * @param Closure $content
      * @param bool $factory
      */
-    public function __construct(string $name, $content, bool $factory = false)
+    public function __construct(string $name, Closure $content, bool $factory = false)
     {
-        if (true === $factory && (!is_callable($content) || !($content instanceof \Closure))) {
-            throw new \RuntimeException('A factory must be a callable');
-        }
-        
         $this->name = $name;
         $this->content = $content;
         $this->factory = $factory;
@@ -74,26 +71,26 @@ class Component
     }
     
     /**
+     * Invoke the content of the component
+     *
+     * It calls the function of the component in the
+     * context of a DI Container so the component
+     * can retrieve it's dependencies
+     *
+     * @param ContainerInterface $container
+     *
      * @return mixed
-     * @throws \Throwable   If an error occurs while reading
+     * @throws \Throwable If an error occurs while reading
      *                      the content of the component
      */
-    public function invoke()
+    public function invoke(ContainerInterface $container)
     {
         try {
-            if (!$this->factory) {
-                if (null === $this->computed) {
-                    if (is_callable($this->content)) {
-                        $this->computed = ($this->content)();
-                    } else {
-                        $this->computed = $this->content;
-                    }
-                }
-        
-                return $this->computed;
-            } else {
-                return ($this->content)();
+            if ($this->factory === true || $this->computed === null) {
+                $this->computed = $this->content->call($container);
             }
+            
+            return $this->computed;
         } catch (\Throwable $e) {
             throw $e;
         }
