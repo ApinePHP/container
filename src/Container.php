@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Apine\Container;
 
-use Closure;
+use Closure, Throwable;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -52,7 +52,7 @@ class Container implements ContainerInterface
             return $this->find($id)->invoke($this);
         } catch (NotFoundExceptionInterface $e) {
             throw $e;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new ContainerException(
                 sprintf('Error while trying to retrieve the entry "%s"', $id)
             );
@@ -68,7 +68,6 @@ class Container implements ContainerInterface
      * @param string $id Identifier of the entry to look for.
      *
      * @return bool
-     * @throws \Throwable
      */
     public function has($id) : bool
     {

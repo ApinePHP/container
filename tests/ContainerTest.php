@@ -5,8 +5,11 @@
  * @license MIT
  * @copyright 2018 Tommy Teasdale
  */
-declare(strict_types=1);
 
+/** @noinspection PhpParamsInspection */
+/** @noinspection ReturnTypeCanBeDeclaredInspection */
+
+declare(strict_types=1);
 
 use Apine\Container\Container;
 use Apine\Container\ContainerException;
