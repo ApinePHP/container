@@ -22,7 +22,7 @@ Add this repository to your composer config:
 Then install the package with composer
 
 ```sh
-composer require apine/container
+composer require apinephp/container
 ```
 
 The package requires PHP 7.2 or newer.
