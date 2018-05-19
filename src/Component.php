@@ -74,9 +74,8 @@ class Component
     /**
      * Invoke the content of the component
      *
-     * It calls the function of the component in the
-     * context of a DI Container so the component
-     * can retrieve it's dependencies
+     * The function of the component MAY accept a ContainerInterface
+     * as its only parameter so it may retrieve it's dependencies
      *
      * @param ContainerInterface $container
      *
@@ -88,7 +87,7 @@ class Component
     {
         try {
             if ($this->factory === true || $this->computed === null) {
-                $this->computed = call_user_func($this->content, [$container]);
+                $this->computed = call_user_func($this->content, $container);
             }
             
             return $this->computed;

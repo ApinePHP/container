@@ -26,6 +26,9 @@ class Container implements ContainerInterface
      *
      * Doing so will override any entry with the same identifier
      *
+     * The function MAY accept a ContainerInterface
+     * as its only parameter so it may retrieve it's dependencies
+     *
      * @param string $id
      * @param Closure $function
      * @param bool $factory
