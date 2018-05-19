@@ -12,6 +12,7 @@ namespace Apine\Container;
 
 use Closure;
 use Psr\Container\ContainerInterface;
+use function call_user_func;
 
 /**
  * Class Component
@@ -87,7 +88,7 @@ class Component
     {
         try {
             if ($this->factory === true || $this->computed === null) {
-                $this->computed = $this->content->call($container);
+                $this->computed = call_user_func($this->content, [$container]);
             }
             
             return $this->computed;
