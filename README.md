@@ -1,25 +1,12 @@
 DI Container
 ============
 
-A dead-simple and minimalistic PSR-11 Dependency Container.
+A minimalistic PSR-11 Dependency Container.
 
 Installation
 ------------
 
-Add this repository to your composer config:
-
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/ApinePHP/container"
-    }
-  ]
-}
-```
-
-Then install the package with composer
+Installation is made with composer
 
 ```sh
 composer require apinephp/container
