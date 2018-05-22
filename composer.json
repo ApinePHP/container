@@ -1,6 +1,10 @@
 {
     "name": "apinephp/container",
-    "description": "A PSR-11 Dependency Container",
+    "description": "A minimalistic PSR-11 Dependency Container",
+	"keyword": [
+		"dependency injection",
+		"container"
+	],
     "type": "library",
     "require": {
         "psr/container": "^1.0",
